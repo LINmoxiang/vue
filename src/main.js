@@ -1,9 +1,12 @@
 import Vue from "vue";
-import 'lib-flexible/flexible'
+import 'lib-flexible/flexible';
+
 import router from "./router";
-import App from './App'
+import App from './App';
 import store from "./store";
 import Header from "./components/Header/Header";
+        
+
 
 Vue.component('Header',Header)
 //全局事件总线

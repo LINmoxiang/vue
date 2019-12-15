@@ -16,7 +16,6 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use((config)=>{
-  console.log(config)
   let data = config.data
   if(data instanceof Object){
     config.data = qs.stringify(data)

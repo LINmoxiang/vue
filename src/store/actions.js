@@ -10,11 +10,12 @@ export default {
       commit(RECEIVE_ADDRESS, data)
     }
   },
-  async getFoodCategories({ commit }) {
+  async getFoodCategories({ commit },callback) {
     const result = await reqFoodCategories()
     const { code, data } = result
     if (code === 0) {
       commit(RECEIVE_FOOD_CATEGORIES,data)
+      typeof callback === 'function' && callback()
     }
   },
   async getShops({ commit, state }) {
