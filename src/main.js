@@ -1,14 +1,17 @@
 import Vue from "vue";
 import 'lib-flexible/flexible';
-
+import './validate';
+        
 import router from "./router";
 import App from './App';
 import store from "./store";
 import Header from "./components/Header/Header";
-        
+import Start from "./components/Start/Start";
+
 
 
 Vue.component('Header',Header)
+Vue.component('Start',Start)
 //全局事件总线
 //Vue.prototype.$bus = new Vue()
 

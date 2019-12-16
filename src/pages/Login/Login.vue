@@ -18,22 +18,27 @@
                   maxlength="11"
                   placeholder="手机号"
                   v-model="phone"
-                  name="myphone"
-                  v-validate="{required: true,regex: /^1\d{10}$/}"
+                  name="phone"
+                  v-validate="'required|mobmobile'"
                 />
-                <span
-                  style="color: red;"
-                  v-show="errors.has('myphone')"
-                >{{ errors.first('myphone') }}</span>
+                <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
                 <button
-                  :disabled="!isRightPhone"
+                  :disabled="!isRightPhone || computeTiem > 0"
                   class="get_verification"
-                  :class="{right:isRightPhone}"
+                  :class="{right:isRightPhone && computeTiem === 0}"
                   @click.prevent="sendCode"
-                >获取验证码</button>
+                >{{computeTiem > 0 ? `已发送验证码(${computeTiem})` : '获取验证码'}}</button>
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="验证码" />
+                <input
+                  type="tel"
+                  maxlength="8"
+                  placeholder="验证码"
+                  v-model="code"
+                  name="code"
+                  v-validate="{required: true,regex: /^\d{6}$/}"
+                />
+                <span style="color: red;" v-show="errors.has('code')">{{ errors.first('code') }}</span>
               </section>
               <section class="login_hint">
                 温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -46,12 +51,12 @@
                   <input
                     type="tel"
                     maxlength="11"
-                    placeholder="手机/邮箱/用户名"
-                    v-model="email"
-                    name="邮箱"
-                    v-validate="{required: true,regex: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/}"
+                    placeholder="用户名"
+                    v-model="name"
+                    name="name"
+                    v-validate="'required|mobile'"
                   />
-                  <span style="color: red;" v-show="errors.has('邮箱')">{{ errors.first('邮箱') }}</span>
+                  <span style="color: red;" v-show="errors.has('name')">{{ errors.first('name') }}</span>
                 </section>
                 <section class="login_verification">
                   <input
@@ -78,11 +83,20 @@
                     maxlength="11"
                     placeholder="验证码"
                     v-model="code"
-                    name="code"
-                    v-validate="{required: true,regex: /^wk3v$/}"
+                    name="capcha"
+                    v-validate="{required: true,regex: /^[0-9a-zA-Z]{4}$/}"
                   />
-                  <span style="color: red;" v-show="errors.has('code')">{{ errors.first('code') }}</span>
-                  <img class="get_verification" src="./images/captcha.svg" alt="captcha" />
+                  <span
+                    style="color: red;"
+                    v-show="errors.has('capcha')"
+                  >{{ errors.first('capcha') }}</span>
+                  <img
+                    class="get_verification"
+                    src="http://localhost:4000/captcha"
+                    alt="captcha"
+                    @click="updateCapcha"
+                    ref="capcha"
+                  />
                 </section>
               </section>
             </div>
@@ -99,36 +113,16 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Vue from "vue";
-import VeeValidate from "vee-validate";
-
-Vue.use(VeeValidate);
-import zh_CN from "vee-validate/dist/locale/zh_CN";
-VeeValidate.Validator.localize("zh_CN", {
-  messages: zh_CN.messages,
-  attributes: {
-    myphone: "手机号",
-    pwd: "密码",
-    code: "验证码"
-  }
-});
-
-// VeeValidate.Validator.extend('pwd', {
-//   validate: value => {
-//     return /^\d{8}$/.test(value)
-//   },
-//   getMessage: field => field + '必须是6位'
-// })
-
 export default {
   data() {
     return {
-      isShowSms: true,
+      isShowSms: true, //true:短信登录  false:密码登录
       phone: "",
-      isShowPwd: false,
-      email: "",
+      isShowPwd: false, //是否显示密码
+      name: "",
       pwd: "",
-      code:''
+      code: "",
+      computeTiem: 0 //计时剩余时间
     };
   },
   computed: {
@@ -137,19 +131,35 @@ export default {
     }
   },
   methods: {
+    //发送短信验证码
     sendCode() {
-      alert("---");
+      //设置倒计时时间
+      this.computeTiem = 5;
+      //启动定时器进行计时
+      const intetvalId = setInterval(() => {
+        this.computeTiem--;
+        if (this.computeTiem === 0) {
+          clearInterval(intetvalId);
+        }
+      }, 1000);
+    },
+    //更新图形验证码
+    updateCapcha() {
+      //给img指定新的src值，利用时间戳
+      this.$refs.capcha.src =
+        "http://localhost:4000/captcha?time=" + Date.now();
     },
     async login() {
-      const result = await this.$validator.validateAll(
-        'code'
-      );
+      let names;
+      if (this.isShowSms) {
+        names = ['phone','code']
+      }else{
+        names = ['name','pwd','capcha'] 
+      }
+      const result = await this.$validator.validateAll(names);
 
       if (result) {
-        alert('提交成功');
-      }else{
-        alert('cuowu')
-        console.log(result)
+        alert("提交成功");
       }
     }
   }
