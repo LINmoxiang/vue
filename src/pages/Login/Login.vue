@@ -19,7 +19,7 @@
                   placeholder="手机号"
                   v-model="phone"
                   name="phone"
-                  v-validate="'required|mobmobile'"
+                  v-validate="'required|mobile'"
                 />
                 <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
                 <button
@@ -54,7 +54,7 @@
                     placeholder="用户名"
                     v-model="name"
                     name="name"
-                    v-validate="'required|mobile'"
+                    v-validate="'required'"
                   />
                   <span style="color: red;" v-show="errors.has('name')">{{ errors.first('name') }}</span>
                 </section>
@@ -65,7 +65,7 @@
                     placeholder="密码"
                     v-model="pwd"
                     name="pwd"
-                    v-validate="{required: true,regex: /\d{8}$/}"
+                    v-validate="'required'"
                   />
                   <span style="color: red;" v-show="errors.has('pwd')">{{ errors.first('pwd') }}</span>
                   <div
@@ -82,20 +82,20 @@
                     type="text"
                     maxlength="11"
                     placeholder="验证码"
-                    v-model="code"
-                    name="capcha"
+                    v-model="captcha"
+                    name="captcha"
                     v-validate="{required: true,regex: /^[0-9a-zA-Z]{4}$/}"
                   />
                   <span
                     style="color: red;"
-                    v-show="errors.has('capcha')"
-                  >{{ errors.first('capcha') }}</span>
+                    v-show="errors.has('captcha')"
+                  >{{ errors.first('captcha') }}</span>
                   <img
                     class="get_verification"
                     src="http://localhost:4000/captcha"
                     alt="captcha"
-                    @click="updateCapcha"
-                    ref="capcha"
+                    @click="updatecaptcha"
+                    ref="captcha"
                   />
                 </section>
               </section>
@@ -113,6 +113,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { Toast, MessageBox } from "mint-ui";
 export default {
   data() {
     return {
@@ -122,6 +123,7 @@ export default {
       name: "",
       pwd: "",
       code: "",
+      captcha:'',
       computeTiem: 0 //计时剩余时间
     };
   },
@@ -132,7 +134,7 @@ export default {
   },
   methods: {
     //发送短信验证码
-    sendCode() {
+    async sendCode() {
       //设置倒计时时间
       this.computeTiem = 5;
       //启动定时器进行计时
@@ -142,24 +144,55 @@ export default {
           clearInterval(intetvalId);
         }
       }, 1000);
+      const result = await this.$API.reqSendCode(this.phone);
+      const { code, msg } = result;
+      if (code === 0) {
+        Toast("验证码短信已发送");
+      } else {
+        this.computeTiem = 0;
+        MessageBox("提示", msg || "发送失败");
+      }
     },
     //更新图形验证码
-    updateCapcha() {
+    updatecaptcha() {
       //给img指定新的src值，利用时间戳
-      this.$refs.capcha.src =
+      this.$refs.captcha.src =
         "http://localhost:4000/captcha?time=" + Date.now();
     },
+
+    //表单验证
     async login() {
       let names;
       if (this.isShowSms) {
-        names = ['phone','code']
-      }else{
-        names = ['name','pwd','capcha'] 
+        names = ["phone", "code"];
+      } else {
+        names = ["name", "pwd", "captcha"];
       }
       const result = await this.$validator.validateAll(names);
-
+      let reqresult
       if (result) {
-        alert("提交成功");
+        const {isShowSms,phone,code,name,pwd,captcha} = this
+        console.log(name,pwd,captcha)
+        if(isShowSms){
+          //短信登陆
+          reqresult = await this.$API.reqPhoneLogin(phone,code)
+        }else{
+          //密码登录
+          reqresult = await this.$API.reqPwdLogin(name,pwd,captcha)
+          //更新图形验证码
+          this.updatecaptcha()
+          //清空文本框
+          this.captcha = ''
+        }
+        if(reqresult.code === 0){
+          const user = reqresult.data
+          //登录跳转
+          this.$router.replace('/profile')
+          //将user保存到vuex中
+          this.$store.dispatch('saveUser',user)
+        }else{
+          alert(reqresult.msg)
+        }
       }
     }
   }

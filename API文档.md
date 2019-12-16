@@ -429,6 +429,7 @@
 ### 请求URL：
 	http://localhost:4000/sendcode
 
+
 ### 示例：
 [http://localhost:4000/sendcode?phone=13716962779](http://localhost:4000/sendcode?phone=13716962779)
 

@@ -10,6 +10,7 @@ import FootGuide from "./components/FootGuide/FootGuide";
 export default {
   created() {
     this.$store.dispatch('getAddress')
+    this.$store.dispatch('autoLogin')
   },
   components: {
     FootGuide

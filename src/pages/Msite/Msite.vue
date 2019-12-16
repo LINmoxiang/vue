@@ -1,6 +1,6 @@
 <template>
   <section class="msite">
-    <Header :title="address.name">
+    <Header :title="address.name || '正在定位...'">
       <span class="header_search" slot="left">
         <i class="iconfont iconicon_sousuo"></i>
       </span>

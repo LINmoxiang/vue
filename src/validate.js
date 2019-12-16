@@ -12,7 +12,7 @@ VeeValidate.Validator.localize('zh_CN', {
     code: '验证码',
     name:'用户名',
     pwd:'密码',
-    capcha:'验证码'
+    captcha:'验证码'
   }
 })
 

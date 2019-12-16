@@ -7,11 +7,14 @@ import App from './App';
 import store from "./store";
 import Header from "./components/Header/Header";
 import Start from "./components/Start/Start";
+import * as API from "./api";
 
 
 
 Vue.component('Header',Header)
 Vue.component('Start',Start)
+
+Vue.prototype.$API = API
 //全局事件总线
 //Vue.prototype.$bus = new Vue()
 
