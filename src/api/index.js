@@ -4,10 +4,19 @@ import ajax from "./ajax";
 export const reqAddress = (latitude,longitude) => ajax(`/position/${latitude},${longitude}`)
 
 //获取食品分类请求
-export const reqFoodCategories = () => ajax('/index_category')
+export const reqFoodCategories = () => ajax('/index_category',{
+  headers:{
+    needCheck:true
+  }
+})
 
 //获取商家列表请求
-export const reqShops = ({latitude,longitude}) => ajax('/shops',{params:{latitude,longitude}})
+export const reqShops = ({latitude,longitude}) => ajax('/shops',{
+  params:{latitude,longitude},
+  headers:{
+    needCheck:true
+  }
+})
 
 //发送短信验证码请求
 export const reqSendCode = (phone) => ajax('/sendcode',{params:{phone}})

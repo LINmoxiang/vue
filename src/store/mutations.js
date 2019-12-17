@@ -1,4 +1,4 @@
-import { RECEIVE_ADDRESS, RECEIVE_FOOD_CATEGORIES, RECEIVE_SHOPS,SAVE_USER,SAVE_TOKEN } from "./mutation_types";
+import { RECEIVE_ADDRESS, RECEIVE_FOOD_CATEGORIES, RECEIVE_SHOPS,SAVE_USER,SAVE_TOKEN,RESET_USER, RESET_TOKEN } from "./mutation_types";
 
 export default{
   [RECEIVE_ADDRESS](state,address){
@@ -11,11 +11,15 @@ export default{
     state.shops = shops
   },
   [SAVE_USER](state,user){
-    console.log(user)
     state.user = user
   },
   [SAVE_TOKEN](state,token){
-    console.log(token)
     state.token = token
+  },
+  [RESET_USER](state){
+    state.user = []
+  },
+  [RESET_TOKEN](state){
+    state.token = ''
   }
 }

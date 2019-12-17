@@ -1,5 +1,5 @@
 import { reqAddress, reqFoodCategories, reqShops, reqAutoLogin } from "../api";
-import { RECEIVE_ADDRESS, RECEIVE_FOOD_CATEGORIES, RECEIVE_SHOPS, SAVE_USER, SAVE_TOKEN } from "./mutation_types";
+import { RECEIVE_ADDRESS, RECEIVE_FOOD_CATEGORIES, RECEIVE_SHOPS, SAVE_USER, SAVE_TOKEN, RESET_USER, RESET_TOKEN } from "./mutation_types";
 
 export default {
   //获取地址
@@ -45,12 +45,18 @@ export default {
   //自动登录
   async autoLogin({ commit, state }) {
     //当有token且没有user用户信息时，需要自动登录
-    if(state.token && !state.user.id){
+    if (state.token && !state.user.id) {
       const result = await reqAutoLogin()
-      if(result.code === 0){
-        commit(SAVE_USER,result.data)
+      if (result.code === 0) {
+        commit(SAVE_USER, result.data)
       }
     }
-    
+  },
+
+  //退出登录
+  logOut({ commit }) {
+    localStorage.removeItem('token_key')
+    commit(RESET_USER)
+    commit(RESET_TOKEN)
   }
 }

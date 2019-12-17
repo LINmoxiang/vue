@@ -104,7 +104,7 @@
           </form>
           <a href="javascript:;" class="about_us">关于我们</a>
         </div>
-        <a href="javascript:" class="go_back" @click="$router.back()">
+        <a href="javascript:" class="go_back" @click="$router.replac('/profile')">
           <i class="iconfont icon-jiantou2"></i>
         </a>
       </div>
@@ -172,7 +172,6 @@ export default {
       let reqresult
       if (result) {
         const {isShowSms,phone,code,name,pwd,captcha} = this
-        console.log(name,pwd,captcha)
         if(isShowSms){
           //短信登陆
           reqresult = await this.$API.reqPhoneLogin(phone,code)
