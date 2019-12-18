@@ -15,6 +15,7 @@ module.exports = {
       },
     },
   },
+
   configureWebpack: {
     resolve: {
       extensions: ['.js', '.vue', '.json'], // 可以省略的后缀名
@@ -24,6 +25,7 @@ module.exports = {
       }
     }
   },
+
   css: { // 添加postcss配置
     loaderOptions: {
       postcss: {
@@ -35,4 +37,13 @@ module.exports = {
       }
     }
   },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: false
+    }
+  }
 }

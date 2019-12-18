@@ -5,5 +5,8 @@ export default{
   categorys: [], // 分类数组
   shops: [], //商家数组
   user:{},
+  goods:[],
+  info:{},
+  ratings:[],
   token:localStorage.getItem('token_key') || ''
 }

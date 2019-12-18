@@ -4,7 +4,7 @@
       <span class="header_search" slot="left">
         <i class="iconfont iconicon_sousuo"></i>
       </span>
-      <span class="header_login" slot="right">
+      <span class="header_login" slot="right" v-if="!user._id">
         <span class="header_login_text" @click="$router.push('/login')">登录|注册</span>
       </span>
     </Header>
@@ -125,7 +125,7 @@ export default {
     });
   },
   computed: {
-    ...mapState(["address", "shops", "categorys"]),
+    ...mapState(["address", "shops", "categorys",'user']),
 
     //方法一:二维数组
     categorysArr() {

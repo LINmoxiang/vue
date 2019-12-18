@@ -51,7 +51,6 @@ instance.interceptors.response.use(
     const response = error.response
     //没法请求有错误
     if (!response) {
-      console.log('无response')
       const path = router.currentRoute.path
       if (path !== '/login') {
         router.replace('/login')
@@ -62,7 +61,6 @@ instance.interceptors.response.use(
 
       //401时需要跳到login
       if (response.status === 401) {
-        console.log('状态为401')
         //若401时，没在登陆界面，退出登录（清除数据/跳到登录界面）
         const path = router.currentRoute.path
         if (path !== '/login') {

@@ -19,6 +19,11 @@
 <script type="text/ecmascript-6">
 import ShopHeader from "@/components/ShopHeader/ShopHeader";
 export default {
+  mounted() {
+    this.$store.dispatch('getGoods')
+    this.$store.dispatch('getRatings')
+    this.$store.dispatch('getInfo')
+  },
   components: {
     ShopHeader
   }
@@ -26,6 +31,7 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+
 @import '../../common/stylus/mixins.styl';
 
 .tab {

@@ -2,13 +2,15 @@ import Vue from "vue";
 import 'lib-flexible/flexible';
 import './validate';
 import { Button } from "mint-ui";
-        
+
 import router from "./router";
 import App from './App';
 import store from "./store";
 import Header from "./components/Header/Header";
 import Start from "./components/Start/Start";
 import * as API from "./api";
+import "./mock/mock-server";
+import i18n from './i18n'
 
 
 
@@ -26,8 +28,11 @@ new Vue({
   beforeMount() {
     Vue.prototype.$bus = this
   },
+
   //注册局部组件
   render: h => h(App),
+
   router,
+  i18n,
   store
 }).$mount('#app')

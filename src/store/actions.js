@@ -1,5 +1,24 @@
-import { reqAddress, reqFoodCategories, reqShops, reqAutoLogin } from "../api";
-import { RECEIVE_ADDRESS, RECEIVE_FOOD_CATEGORIES, RECEIVE_SHOPS, SAVE_USER, SAVE_TOKEN, RESET_USER, RESET_TOKEN } from "./mutation_types";
+import {
+  reqAddress,
+  reqFoodCategories,
+  reqShops,
+  reqAutoLogin,
+  reqGoods,
+  reqInfo,
+  reqRatings
+} from "../api";
+import {
+  RECEIVE_ADDRESS,
+  RECEIVE_FOOD_CATEGORIES,
+  RECEIVE_SHOPS,
+  SAVE_USER,
+  SAVE_TOKEN,
+  RESET_USER,
+  RESET_TOKEN,
+  SAVE_GOODS,
+  SAVE_RATINGS,
+  SAVE_INFO
+} from "./mutation_types";
 
 export default {
   //获取地址
@@ -58,5 +77,29 @@ export default {
     localStorage.removeItem('token_key')
     commit(RESET_USER)
     commit(RESET_TOKEN)
+  },
+
+  async getGoods({ commit }, cb) {
+    const result = await reqGoods()
+    if(result.code === 0){
+      commit(SAVE_GOODS,result.data)
+    }
+    typeof cb === 'function' && cb()
+  },
+
+  async getRatings({ commit }, cb) {
+    const result = await reqRatings()
+    if(result.code === 0){
+      commit(SAVE_RATINGS,result.data)
+    }
+    typeof cb === 'function' && cb()
+  },
+
+  async getInfo({ commit }, cb) {
+    const result = await reqInfo()
+    if(result.code === 0){
+      commit(SAVE_INFO,result.data)
+    }
+    typeof cb === 'function' && cb()
   }
 }

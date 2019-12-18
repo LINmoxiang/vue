@@ -100,13 +100,14 @@
                 </section>
               </section>
             </div>
-            <button class="login_submit" @click.prevent="login()">登录</button>
+            <button class="login_submit" @click.prevent="login()">{{$t('login_login')}}</button>
           </form>
-          <a href="javascript:;" class="about_us">关于我们</a>
+          <a href="javascript:;" class="about_us">{{$t('login_aboutUs')}}</a>
         </div>
-        <a href="javascript:" class="go_back" @click="$router.replac('/profile')">
+        <a href="javascript:" class="go_back" @click="$router.replace('/profile')">
           <i class="iconfont icon-jiantou2"></i>
         </a>
+        <button @click="toggleLanguage">切换语言</button>
       </div>
     </section>
   </div>
@@ -193,6 +194,16 @@ export default {
           alert(reqresult.msg)
         }
       }
+    },
+
+    //设置国际化语言
+    toggleLanguage () {
+      // 根据当前语言得到新的语言
+      const locale = this.$i18n.locale==='en' ? 'zh_CN' : 'en'
+      // 指定新的语言
+      this.$i18n.locale = locale
+      // 将新的语言保存到local
+      localStorage.setItem('locale_key', locale)
     }
   }
 };
