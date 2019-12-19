@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script type="text/javascript">
+    var bar = function () {
+      console.log(this.x)
+    }
+    var foo = {x:3}
+    var sed ={x:4}
+    var fun1 = bar.bind(foo).bind(sed)
+    fun1() //3
+
+    var fiv = {x:5}
+    var fun2 = bar.bind(foo).bind(sed).bind(fiv)
+    fun2() //3
+
+    //bind()只改变第一次的指向
+  </script>
+</body>
+</html>
