@@ -125,7 +125,12 @@ export default {
     });
   },
   computed: {
-    ...mapState(["address", "shops", "categorys",'user']),
+    ...mapState({
+      address : state => state.msite.address,
+      shops : state => state.msite.shops,
+      categorys : state => state.msite.categorys,
+      user : state => state.user.user
+    }),
 
     //方法一:二维数组
     categorysArr() {

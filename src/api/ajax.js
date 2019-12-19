@@ -27,7 +27,7 @@ instance.interceptors.request.use((config) => {
   }
 
   //通过请求头携带token数据
-  const token = store.state.token
+  const token = store.state.user.token
   if (token) {
     config.headers.Authorization = token
   } else {

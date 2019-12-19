@@ -38,63 +38,73 @@
       </div>
       <div class="discounts-right">{{info.supports.length}}个优惠</div>
     </div>
-    <div class="shop-brief-modal" v-if="isShowShop">
-      <div class="brief-modal-content">
-        <h2 class="content-title">
-          <span class="content-tag">
-            <span class="mini-tag">品牌</span>
-          </span>
-          <span class="content-name">嘉禾一品（温都水城）</span>
-        </h2>
-        <ul class="brief-modal-msg">
-          <li>
-            <h3>3.5</h3>
-            <p>评分</p>
-          </li>
-          <li>
-            <h3>90单</h3>
-            <p>月售</p>
-          </li>
-          <li>
-            <h3>硅谷专送</h3>
-            <p>约28分钟</p>
-          </li>
-          <li>
-            <h3>4元</h3>
-            <p>配送费用</p>
-          </li>
-          <li>
-            <h3>1000m</h3>
-            <p>距离</p>
-          </li>
-        </ul>
-        <h3 class="brief-modal-title">
-          <span>公告</span>
-        </h3>
-        <div class="brief-modal-notice">是以粥为特色的中式营养快餐，自2004年10月18日创立“嘉和一品”品牌至今</div>
-        <div class="mask-footer" @click="isShowShop = false">
-          <span class="iconfont icon-close"></span>
-        </div>
-      </div>
-      <div class="brief-modal-cover" @click="isShowShop=false"></div>
-    </div>
-    <div class="activity-sheet" v-if="isShowActivity">
-      <div class="activity-sheet-content">
-        <h2 class="activity-sheet-title">优惠活动</h2>
-        <ul class="list">
-          <li class="activity-item" :class="supportClass[support.type]" v-for="(support,index) in info.supports" :key="index">
+    <transition name="showInfo">
+      <div class="shop-brief-modal" v-if="isShowShop">
+        <div class="brief-modal-content">
+          <h2 class="content-title">
             <span class="content-tag">
-              <span class="mini-tag">{{support.name}}</span>
+              <span class="mini-tag">品牌</span>
             </span>
-            <span class="activity-content">{{support.content}}</span>
-          </li>
-        </ul>
-        <div class="activity-sheet-close" @click="isShowActivity = false">
-          <span class="iconfont icon-close"></span>
+            <span class="content-name">嘉禾一品（温都水城）</span>
+          </h2>
+          <ul class="brief-modal-msg">
+            <li>
+              <h3>3.5</h3>
+              <p>评分</p>
+            </li>
+            <li>
+              <h3>90单</h3>
+              <p>月售</p>
+            </li>
+            <li>
+              <h3>硅谷专送</h3>
+              <p>约28分钟</p>
+            </li>
+            <li>
+              <h3>4元</h3>
+              <p>配送费用</p>
+            </li>
+            <li>
+              <h3>1000m</h3>
+              <p>距离</p>
+            </li>
+          </ul>
+          <h3 class="brief-modal-title">
+            <span>公告</span>
+          </h3>
+          <div class="brief-modal-notice">是以粥为特色的中式营养快餐，自2004年10月18日创立“嘉和一品”品牌至今</div>
+          <div class="mask-footer" @click="isShowShop = false">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
+        <div class="brief-modal-cover" @click="isShowShop=false"></div>
       </div>
-      <div class="activity-sheet-cover" @click="isShowActivity = false"></div>
-    </div>
+    </transition>
+
+    <transition name="move">
+      <div class="activity-sheet" v-if="isShowActivity">
+        <div class="activity-sheet-content">
+          <h2 class="activity-sheet-title">优惠活动</h2>
+          <ul class="list">
+            <li
+              class="activity-item"
+              :class="supportClass[support.type]"
+              v-for="(support,index) in info.supports"
+              :key="index"
+            >
+              <span class="content-tag">
+                <span class="mini-tag">{{support.name}}</span>
+              </span>
+              <span class="activity-content">{{support.content}}</span>
+            </li>
+          </ul>
+          <div class="activity-sheet-close" @click="isShowActivity = false">
+            <span class="iconfont icon-close"></span>
+          </div>
+        </div>
+        <div class="activity-sheet-cover" @click="isShowActivity = false"></div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -105,11 +115,15 @@ export default {
     return {
       isShowShop: false,
       isShowActivity: false,
-      supportClass:['activity-green','activity-red','activity-orange']
+      supportClass: ["activity-green", "activity-red", "activity-orange"]
     };
   },
   computed: {
-    ...mapState(["goods", "info", "ratings"])
+    ...mapState({
+      goods: state => state.shop.goods,
+      info: state => state.shop.info,
+      ratings: state => state.shop.ratings
+    })
   }
 };
 </script>
@@ -348,6 +362,15 @@ export default {
     flex-direction: column;
     color: #333;
 
+    &.showInfo-enter-active, &.showInfo-leave-active {
+      transition: all 0.5s;
+    }
+
+    &.showInfo-enter, &.showInfo-leave-to {
+      transform: translateY(0);
+      opacity: 0;
+    }
+
     .brief-modal-cover {
       position: absolute;
       width: 100%;
@@ -463,6 +486,7 @@ export default {
         border: 1px solid rgba(255, 255, 255, 0.7);
         border-radius: 50%;
         transform: translateX(-50%);
+
         span {
           font-size: 16px;
           color: rgba(255, 255, 255, 0.7);
@@ -480,10 +504,10 @@ export default {
     z-index: 99;
 
     &.move-enter-active, &.move-leave-active {
-      transition: opacity 0.3s;
+      transition: opacity 0.5s;
     }
 
-    &.move-enter-active, &.move-leave-active {
+    &.move-enter, &.move-leave-to {
       opacity: 0;
     }
 

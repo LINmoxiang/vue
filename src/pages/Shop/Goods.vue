@@ -2,10 +2,16 @@
   <div>
     <div class="goods">
       <div class="menu-wrapper" ref="left">
-        <ul>
-          <li class="menu-item" :class="{current:currentIndex === index}" v-for="(good,index) in goods" :key="index" @click="clickGood(index)">
+        <ul ref="leftLi">
+          <li
+            class="menu-item"
+            :class="{current:currentIndex === index}"
+            v-for="(good,index) in goods"
+            :key="index"
+            @click="clickGood(index)"
+          >
             <span class="text bottom-border-1px">
-              <img class="icon" v-if="good.icon" :src="good.icon"/>
+              <img class="icon" v-if="good.icon" :src="good.icon" />
               {{good.name}}
             </span>
           </li>
@@ -16,13 +22,14 @@
           <li class="food-list-hook" v-for="(good,index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li
+                class="food-item bottom-border-1px"
+                v-for="(food, index) in good.foods"
+                :key="index"
+                @click="isShowItem(food)"
+              >
                 <div class="icon">
-                  <img
-                    width="57"
-                    height="57"
-                    :src="food.icon"
-                  />
+                  <img width="57" height="57" :src="food.icon" />
                 </div>
                 <div class="content">
                   <h2 class="name">{{food.name}}</h2>
@@ -34,78 +41,107 @@
                   <div class="price">
                     <span class="now">￥{{food.price}}</span>
                   </div>
-                  <div class="cartcontrol-wrapper">CartControl组件</div>
+                  <div class="cartcontrol-wrapper">
+                    <CartControl :food="food"></CartControl>
+                  </div>
                 </div>
               </li>
             </ul>
           </li>
         </ul>
       </div>
+      <ShopCart />
     </div>
+    <Food :food="food" ref="food"></Food>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import BScroll from 'better-scroll'
-import { mapState } from "vuex"
+import BScroll from "better-scroll";
+import { mapState } from "vuex";
+import Food from "../../components/Food/Food";
+import ShopCart from "../../components/ShopCart/ShopCart";
 
 export default {
   data() {
     return {
-      tops:[],
-      scrollY:0
-    }
+      tops: [],
+      scrollY: 0,
+      food: {}
+    };
   },
   computed: {
-    ...mapState(['goods']),
-    currentIndex(){
-      const {tops,scrollY} = this
-      return tops.findIndex((top,index) => scrollY >= top && scrollY < tops[index+1])
+    ...mapState({
+      goods: state => state.shop.goods
+    }),
+    currentIndex() {
+      const { tops, scrollY } = this;
+      const index = tops.findIndex(
+        (top, index) => scrollY >= top && scrollY < tops[index + 1]
+      );
+      if (index !== this.index && this.leftScroll) {
+        this.index = index;
+        const liItem = this.$refs.leftLi.children[index];
+        this.leftScroll.scrollToElement(liItem, 300);
+      }
+      return index;
     }
   },
   methods: {
-    //初始滑动Y轴距离
-    initScroll(){
-      new BScroll(this.$refs.left,{
-        click:true
-      })
-      this.rightScroll = new BScroll(this.$refs.right,{probeType:1})
-      this.rightScroll.on('scroll',({x,y})=>{
-        this.scrollY = Math.abs(y)
-      })
-      this.rightScroll.on('scrollEnd',({x,y})=>{
-        this.scrollY = Math.abs(y)
-      })
+    //初始滑动
+    initScroll() {
+      this.leftScroll = new BScroll(this.$refs.left, {
+        click: true
+      });
+      this.rightScroll = new BScroll(this.$refs.right, {
+        probeType: 1,
+        click: true
+      });
+      this.rightScroll.on("scroll", ({ x, y }) => {
+        this.scrollY = Math.abs(y);
+      });
+      this.rightScroll.on("scrollEnd", ({ x, y }) => {
+        this.scrollY = Math.abs(y);
+      });
     },
     //初始化Tops数组
-    initTops(){
-      const tops = []
-      let top = 0
-      tops.push(top)
-      const lis = Array.prototype.slice.call(this.$refs.liArr.children)
-      lis.forEach(li=>{
-        top += li.clientHeight
-        tops.push(top)
-      })
-      this.tops = tops
+    initTops() {
+      const tops = [];
+      let top = 0;
+      tops.push(top);
+      const lis = Array.prototype.slice.call(this.$refs.liArr.children);
+      lis.forEach(li => {
+        top += li.clientHeight;
+        tops.push(top);
+      });
+      this.tops = tops;
     },
     //左侧分类点击
-    clickGood(index){
-      const top = this.tops[index]
+    clickGood(index) {
+      const top = this.tops[index];
       //点击后立即改变
-      this.scrollY = top
+      this.scrollY = top;
       //让右侧列表滑动到对应位置
-      this.rightScroll.scrollTo(0,-top,300)
+      this.rightScroll.scrollTo(0, -top, 300);
+    },
+    //点击现实食物详情
+    isShowItem(food) {
+      this.food = food;
+      this.$refs.food.toggleShow();
     }
   },
   watch: {
-    goods(){
-      this.$nextTick(()=>{
-        this.initScroll()
-        this.initTops()
-      })
+    goods() {
+      this.$nextTick(() => {
+        this.initScroll();
+        this.initTops();
+      });
     }
   },
+  components: {
+    Food,
+    ShopCart
+  }
 };
 </script>
 
@@ -122,7 +158,7 @@ export default {
   overflow: hidden;
 
   .menu-wrapper {
-    flex: 0 0 80px;
+    flex: 0 0 auto;
     width: 80px;
     background: #f3f5f7;
 

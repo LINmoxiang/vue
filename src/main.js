@@ -2,21 +2,29 @@ import Vue from "vue";
 import 'lib-flexible/flexible';
 import './validate';
 import { Button } from "mint-ui";
+import VueLazyload from 'vue-lazyload'
 
 import router from "./router";
 import App from './App';
 import store from "./store";
 import Header from "./components/Header/Header";
 import Start from "./components/Start/Start";
+import CartControl from "./components/CartControl/CartControl";
 import * as API from "./api";
 import "./mock/mock-server";
 import i18n from './i18n'
+import loading from '@/common/images/loading.gif'
 
 
 
 Vue.component('Header',Header)
 Vue.component('Start',Start)
+Vue.component('CartControl',CartControl)
 Vue.component(Button.name,Button)
+
+Vue.use(VueLazyload,{
+  loading,
+})
 
 Vue.prototype.$API = API
 //全局事件总线
