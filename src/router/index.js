@@ -51,24 +51,26 @@ export default new VueRouter({
       component:Login,
     },
     {
-      path:'/shop',
+      name:'shop',
+      path:'/shop/:id',
+      props:true,
       component:Shop,
       children:[
         {
-          path:'/shop/goods',
+          path:'goods',
           component:Goods
         },
         {
-          path:'/shop/info',
+          path:'info',
           component:Info
         },
         {
-          path:'/shop/rating',
+          path:'rating',
           component:Rating
         },
         {
           path:'',
-          redirect:'/shop/goods'
+          redirect:'goods'
         }
       ]
     },

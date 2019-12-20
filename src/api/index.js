@@ -30,11 +30,14 @@ export const reqPhoneLogin = (phone,code) => ajax.post('/login_sms',{phone,code}
 //自动登录请求
 export const reqAutoLogin = () => ajax.get('/auto_login')
 
-//请求商家物品分类
-export const reqGoods = () => ajax('/goods')
+// //请求商家物品分类
+// export const reqGoods = () => ajax('/goods')
 
-//请求商家评论
-export const reqRatings = () => ajax('/ratings')
+// //请求商家评论
+// export const reqRatings = () => ajax('/ratings')
 
-//请求商品信息
-export const reqInfo = () => ajax('/info')
+// //请求商品信息
+// export const reqInfo = () => ajax('/info')
+
+//获取商家信息
+export const reqShop = (id) => ajax('/shop/'+id)

@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     ...mapState({
-      goods: state => state.shop.goods
+      goods: state => state.shop.shop.goods || []
     }),
     currentIndex() {
       const { tops, scrollY } = this;

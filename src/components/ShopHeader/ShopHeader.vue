@@ -120,9 +120,9 @@ export default {
   },
   computed: {
     ...mapState({
-      goods: state => state.shop.goods,
-      info: state => state.shop.info,
-      ratings: state => state.shop.ratings
+      goods: state => state.shop.shop.goods || [],
+      info: state => state.shop.shop.info || {},
+      ratings: state => state.shop.shop.ratings || []
     })
   }
 };

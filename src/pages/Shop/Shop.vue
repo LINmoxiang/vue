@@ -3,13 +3,13 @@
     <ShopHeader />
     <div class="tab">
       <div class="tab-item">
-        <router-link to="/shop/goods" replace>点餐</router-link>
+        <router-link :to="`/shop/${id}/goods`" replace>点餐</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/shop/rating" replace>评价</router-link>
+        <router-link :to="`/shop/${id}/rating`" replace>评价</router-link>
       </div>
       <div class="tab-item">
-        <router-link to="/shop/info" replace>信息</router-link>
+        <router-link :to="`/shop/${id}/info`" replace>信息</router-link>
       </div>
     </div>
     <router-view></router-view>
@@ -17,12 +17,29 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { mapState } from "vuex";
 import ShopHeader from "@/components/ShopHeader/ShopHeader";
+import { saveCount } from "@/utils";
 export default {
+  props: ["id"],
   mounted() {
-    this.$store.dispatch('getGoods')
-    this.$store.dispatch('getRatings')
-    this.$store.dispatch('getInfo')
+    // this.$store.dispatch('getGoods')
+    // this.$store.dispatch('getRatings')
+    // this.$store.dispatch('getInfo')
+    this.$store.dispatch("getShop", this.id);
+  },
+  computed: {
+    ...mapState(
+      {
+        shop: state => state.shop
+      }
+    )
+  },
+  beforeDestroy() {
+    console.log(this.shop);
+    // const {shop:{id},cartFoods} = this.shop
+    // console.log(id,cartFoods)
+    // saveCount(id,cartFoods)
   },
   components: {
     ShopHeader
@@ -31,7 +48,6 @@ export default {
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-
 @import '../../common/stylus/mixins.styl';
 
 .tab {
