@@ -130,6 +130,12 @@ export default {
       this.$refs.food.toggleShow();
     }
   },
+  mounted() {
+    if(this.goods.length>0){
+      this.initScroll();
+      this.initTops();
+    }
+  },
   watch: {
     goods() {
       this.$nextTick(() => {

@@ -27,6 +27,11 @@ export default {
     // this.$store.dispatch('getRatings')
     // this.$store.dispatch('getInfo')
     this.$store.dispatch("getShop", this.id);
+    window.addEventListener('unload',()=>{
+      console.log('unload')
+      const {shop:{id},cartFoods} = this.shop
+      saveCount(id,cartFoods)
+    })
   },
   computed: {
     ...mapState(
@@ -36,10 +41,8 @@ export default {
     )
   },
   beforeDestroy() {
-    console.log(this.shop);
-    // const {shop:{id},cartFoods} = this.shop
-    // console.log(id,cartFoods)
-    // saveCount(id,cartFoods)
+    const {shop:{id},cartFoods} = this.shop
+    saveCount(id,cartFoods)
   },
   components: {
     ShopHeader

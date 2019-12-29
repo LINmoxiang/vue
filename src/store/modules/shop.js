@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import { getCount } from "@/utils";
+
 import {
   // reqGoods,
   // reqInfo,
@@ -69,7 +71,8 @@ export default {
       const result = await reqShop(id)
         if(result.code === 0){
           const shop = result.data
-          commit(SAVE_SHOP,{shop})
+          const cartFoods = getCount(shop)
+          commit(SAVE_SHOP,{shop,cartFoods})
         }
       },
 

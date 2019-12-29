@@ -22,7 +22,7 @@ export default {
     updateFoodCount:throttle(function(isAdd) {
       const food = this.food;
       this.$store.dispatch("updateFoodCount", { isAdd, food });
-    },500)
+    },500,{trailing: false})
   }
 };
 </script>
